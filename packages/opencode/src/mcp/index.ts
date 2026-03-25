@@ -156,6 +156,7 @@ export namespace MCP {
   type PromptInfo = Awaited<ReturnType<MCPClient["listPrompts"]>>["prompts"][number]
 
   type ResourceInfo = Awaited<ReturnType<MCPClient["listResources"]>>["resources"][number]
+  type ResourceTemplateInfo = Awaited<ReturnType<MCPClient["listResourceTemplates"]>>["resourceTemplates"][number]
   type McpEntry = NonNullable<Config.Info["mcp"]>[string]
   function isMcpConfigured(entry: McpEntry): entry is Config.Mcp {
     return typeof entry === "object" && entry !== null && "type" in entry
@@ -284,6 +285,28 @@ export namespace MCP {
       const key = sanitizedClientName + ":" + sanitizedResourceName
 
       commands[key] = { ...resource, client: clientName }
+    }
+    return commands
+  }
+
+  async function fetchResourceTemplatesForClient(clientName: string, client: Client) {
+    const templates = await client.listResourceTemplates().catch((e) => {
+      log.error("failed to get resource templates", { clientName, error: e.message })
+      return undefined
+    })
+
+    if (!templates) {
+      return
+    }
+
+    const commands: Record<string, ResourceTemplateInfo & { client: string }> = {}
+
+    for (const template of templates.resourceTemplates) {
+      const sanitizedClientName = clientName.replace(/[^a-zA-Z0-9_-]/g, "_")
+      const sanitizedTemplateName = template.name.replace(/[^a-zA-Z0-9_-]/g, "_")
+      const key = sanitizedClientName + ":" + sanitizedTemplateName
+
+      commands[key] = { ...template, client: clientName }
     }
     return commands
   }
@@ -679,6 +702,27 @@ export namespace MCP {
             }
 
             return Object.entries((await fetchResourcesForClient(clientName, client)) ?? {})
+          }),
+        )
+      ).flat(),
+    )
+
+    return result
+  }
+
+  export async function resourceTemplates() {
+    const s = await state()
+    const clientsSnapshot = await clients()
+
+    const result = Object.fromEntries<ResourceTemplateInfo & { client: string }>(
+      (
+        await Promise.all(
+          Object.entries(clientsSnapshot).map(async ([clientName, client]) => {
+            if (s.status[clientName]?.status !== "connected") {
+              return []
+            }
+
+            return Object.entries((await fetchResourceTemplatesForClient(clientName, client)) ?? {})
           }),
         )
       ).flat(),

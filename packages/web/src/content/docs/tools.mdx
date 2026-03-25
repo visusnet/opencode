@@ -320,6 +320,40 @@ Use `websearch` when you need to find information (discovery), and `webfetch` wh
 
 ---
 
+### mcp_list_resources
+
+List available resources and resource templates from connected MCP servers.
+
+```json title="opencode.json" {4}
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "mcp_list_resources": "allow"
+  }
+}
+```
+
+Returns resource templates (with `uriTemplate`) and resource instances (with `uri`) from all connected MCP servers. Use this to discover what data MCP servers expose as resources. Optionally filter by server name.
+
+---
+
+### mcp_read_resource
+
+Read a resource from an MCP server by URI.
+
+```json title="opencode.json" {4}
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "mcp_read_resource": "allow"
+  }
+}
+```
+
+Reads a specific resource from an MCP server. Use `mcp_list_resources` first to discover available resources and templates. For parameterized resource templates, construct the URI by replacing the template variables yourself.
+
+---
+
 ### question
 
 Ask the user questions during execution.

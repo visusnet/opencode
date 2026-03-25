@@ -9,6 +9,23 @@ Once added, MCP tools are automatically available to the LLM alongside built-in 
 
 ---
 
+## Resources
+
+MCP servers can also expose _resources_ — structured data the LLM can read on demand. While tools perform actions, resources provide context like project metadata, configuration, or entity data.
+
+OpenCode includes two built-in tools for working with MCP resources:
+
+- **`mcp_list_resources`** — discover available resources and resource templates from connected servers
+- **`mcp_read_resource`** — read a specific resource by URI
+
+Resource templates use parameterized URIs (e.g. `myserver://projects/{projectId}`). The LLM constructs the final URI from context and reads the resource directly.
+
+:::tip
+Resources are a way for MCP servers to share data without requiring a dedicated tool for every query. If your MCP server exposes resources, the LLM can access them automatically through the built-in resource tools.
+:::
+
+---
+
 #### Caveats
 
 When you use an MCP server, it adds to the context. This can quickly add up if you have a lot of tools. So we recommend being careful with which MCP servers you use.

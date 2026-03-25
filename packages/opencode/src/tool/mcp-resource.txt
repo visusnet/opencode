@@ -1,0 +1,6 @@
+- Read a resource from an MCP server by URI
+- Use this to access data exposed by MCP servers as resources
+- The server parameter is the MCP server name
+- The uri parameter is the full resource URI
+- For parameterized resources, construct the URI from the template yourself
+- Use mcp_list_resources first to discover available resources and templates

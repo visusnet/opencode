@@ -1,0 +1,5 @@
+- List available resources and resource templates from connected MCP servers
+- Returns resource templates (with uriTemplate) and resource instances (with uri)
+- Use mcp_read_resource to read any resource by URI
+- For templates, construct the URI by replacing the variables before reading
+- Optionally filter by MCP server name using the server parameter
