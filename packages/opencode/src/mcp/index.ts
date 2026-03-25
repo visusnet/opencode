@@ -256,9 +256,9 @@ export namespace MCP {
     }
 
     const commands: Record<string, PromptInfo & { client: string }> = {}
+    const sanitizedClientName = clientName.replace(/[^a-zA-Z0-9_-]/g, "_")
 
     for (const prompt of prompts.prompts) {
-      const sanitizedClientName = clientName.replace(/[^a-zA-Z0-9_-]/g, "_")
       const sanitizedPromptName = prompt.name.replace(/[^a-zA-Z0-9_-]/g, "_")
       const key = sanitizedClientName + ":" + sanitizedPromptName
 
@@ -269,7 +269,7 @@ export namespace MCP {
 
   async function fetchResourcesForClient(clientName: string, client: Client) {
     const resources = await client.listResources().catch((e) => {
-      log.error("failed to get prompts", { clientName, error: e.message })
+      log.error("failed to get resources", { clientName, error: e.message })
       return undefined
     })
 
@@ -278,9 +278,9 @@ export namespace MCP {
     }
 
     const commands: Record<string, ResourceInfo & { client: string }> = {}
+    const sanitizedClientName = clientName.replace(/[^a-zA-Z0-9_-]/g, "_")
 
     for (const resource of resources.resources) {
-      const sanitizedClientName = clientName.replace(/[^a-zA-Z0-9_-]/g, "_")
       const sanitizedResourceName = resource.name.replace(/[^a-zA-Z0-9_-]/g, "_")
       const key = sanitizedClientName + ":" + sanitizedResourceName
 
@@ -300,9 +300,9 @@ export namespace MCP {
     }
 
     const commands: Record<string, ResourceTemplateInfo & { client: string }> = {}
+    const sanitizedClientName = clientName.replace(/[^a-zA-Z0-9_-]/g, "_")
 
     for (const template of templates.resourceTemplates) {
-      const sanitizedClientName = clientName.replace(/[^a-zA-Z0-9_-]/g, "_")
       const sanitizedTemplateName = template.name.replace(/[^a-zA-Z0-9_-]/g, "_")
       const key = sanitizedClientName + ":" + sanitizedTemplateName
 
